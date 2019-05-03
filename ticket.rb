@@ -1,48 +1,46 @@
-ticket = Object.new
-
-def ticket.date
-  "1903-01-02"
-end
-
-def ticket.venue
-  "Town Hall"
-end
-
-def ticket.event
-  "Author's reading"
-end
-
-def ticket.performer
-  "Samuel Clemens"
-end
-
-def ticket.seat
-  "Second Balcony, row J, seat 12"
-end
-
-def ticket.price
-  5.50
-end
-
-def ticket.print_details(*x)
-  x.each {|detail| puts "This ticket is #{detail}." }
-end
-
-  puts "This ticket is for: #{ticket.event}, at #{ticket.venue}.\n" +
-  "The performer is #{ticket.performer}.\n" +
-  "The seat is #{ticket.seat}, "   +
-  "and it costs $#{"%.2f" % ticket.price}"
-
-  ticket.print_details("non-refundable", "non-transferable", "non-smoking section")
+class Ticket
   
-
-def change_string(str)
-  str.replace("New string content!")
+  VENUES = ["Convention Center", "Fairgrounds", "Town Hall"]
+  attr_reader :venue, :date
+  attr_accessor :price
+  def initialize(venue)
+    @venue = venue
+  end
+  
+  def date= (date)
+    year, month, day = date.split('-')
+     year = year.to_i
+    if(year > 99)
+      @date = date
+    else
+      puts "Please enter a valid date in the form yyyy/mm/dd"
+    end
+  end
+  
+  def discount(amount)
+    return ((1 - (amount/100.0)) * @price)
+  end
 end
 
-s = "Original string content"
+def Ticket.most_expensive(*tickets)
+  tickets.max_by(&:price)
+end
 
-s.freeze
+th = Ticket.new("Town hall")
+th.price = 100
+puts "$#{"%.2f" % th.price}, #{th.venue}"
 
-change_string(s)
-puts s
+th1 = Ticket.new("Mayor's office")
+th1.price = 50
+puts "$#{"%.2f" % th1.price}, #{th1.venue}"
+
+highest = Ticket.most_expensive(th1, th)
+puts "#{highest.venue}"
+
+puts Ticket::VENUES.to_s
+
+Ticket::VENUES << "High School Gymnasium"
+
+puts Ticket::VENUES.to_s
+
+puts Ticket.is_a?(Object)
